@@ -1,0 +1,62 @@
+/* Estilos base - podem ser compartilhados com o login */
+.register-container {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
+  font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+}
+
+.register-form-wrapper {
+  width: 100%;
+  max-width: 480px;
+  margin: auto;
+  padding: 2rem;
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.register-header h2 {
+  color: #ffffff;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.register-header p {
+  color: #cccccc;
+}
+
+/* Formulário */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Botão de voltar */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #00bfff;
+  text-decoration: none;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .register-form-wrapper {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+}
