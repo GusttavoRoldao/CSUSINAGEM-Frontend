@@ -15,11 +15,15 @@ export default function Login() {
     if (data.success) {
       localStorage.setItem("token", data.token);
       setError("");
-      navigate("/dashboard");
+      //navigate("/dashboard");
+       window.location.href = "/dashboard";
     } else {
       setError(data.message || "Falha no login");
     }
   }
+
+  console.log('API base URL:', import.meta.env.VITE_BACKEND_URL);
+
 
   return (
     <form onSubmit={handleSubmit} style={{ maxWidth: 300, margin: "auto", padding: 20 }}>
