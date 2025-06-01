@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import "./Login.css"; // Ou import "./Register.css" se criar arquivo separado
+import "./Register.css"; // Ou import "" se criar arquivo separado
 
 interface RegisterForm {
   name: string;
