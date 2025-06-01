@@ -15,7 +15,7 @@ export default function Register() {
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
-   const API_URL = import.meta.env.VITE_API_URL;
+   const API_URL = import.meta.env.VITE_BACKEND_URL;
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -25,7 +25,7 @@ export default function Register() {
     e.preventDefault();
 
     try {
-      const res = await fetch(`${import.meta.env.API_URL}/customer`, {
+      const res = await fetch(`${API_URL}/customer`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
