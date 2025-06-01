@@ -1,0 +1,40 @@
+/* Container da sidebar sempre visível */
+.sidebar-container {
+  position: fixed;
+  left: 0; /* fixada no canto esquerdo */
+  top: 0;
+  height: 100%;
+  width: 235px; /* largura fixa da sidebar */
+  z-index: 1000;
+  overflow-y: auto;
+
+
+
+
+
+}
+
+/* Estilos da sidebar interna */
+.sidebar {
+  background-color: rgb(27, 17, 104);
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #200000;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.sidebar-logo {
+  width: 25vh;
+  margin: 10px 10;
+  display: block;
+  border-radius: 25px;
+}

@@ -1,0 +1,95 @@
+/* Fundo escuro e centralização do modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0; /* corrigido */
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* fundo preto translúcido */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Caixa branca do formulário com sombra e cantos arredondados */
+.modal-form {
+  background-color: #000000;
+  padding: 25px 30px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  color: #333;
+}
+
+/* Título do modal */
+.modal-form h3 {
+  margin: 0;
+  color: #fbe2e2;
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+/* Inputs de texto e arquivo */
+.modal-form input[type="text"],
+.modal-form input[type="file"] {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #000000fb;
+  border-radius: 6px;
+  color: #000000ee;
+  background-color: rgb(255, 255, 255);
+}
+
+/* Botões */
+.modal-form button {
+  padding: 10px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+/* Botão Salvar verde */
+.modal-form button[type="submit"] {
+  background-color: #286ac1;
+  color: white;
+}
+
+/* Botão Cancelar cinza */
+.modal-form button[type="button"] {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+/* Espaçamento entre os botões para que fiquem um ao lado do outro */
+.modal-form button[type="submit"],
+.modal-form button[type="button"] {
+  width: 48%;
+}
+
+.modal-form button[type="submit"] {
+  margin-right: 4%;
+}
+
+/* Opcional: deixar os botões em linha */
+.modal-form {
+  flex-direction: column;
+}
+
+.modal-form > button {
+  /* Mantém espaçamento */
+}
+
+/* Se quiser que os botões fiquem lado a lado, use este estilo em vez do acima */
+/*
+.modal-form {
+  flex-direction: row;
+  justify-content: space-between;
+}
+*/
