@@ -10,7 +10,7 @@ const ModalCategoria: React.FC<ModalProps> = ({ onClose, onCategoryAdded }) => {
   const [name, setName] = useState("");
   const [image, setImage] = useState<File | null>(null);
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_BACKEND_URL;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
