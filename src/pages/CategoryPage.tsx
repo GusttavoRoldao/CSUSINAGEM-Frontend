@@ -26,7 +26,7 @@ const Modal: React.FC<{ onClose: () => void }> = ({ children, onClose }) => (
 );
 
 const CategoryPage: React.FC<CategoryPageProps> = () => {
-    const [showImageModal, setShowImageModal] = useState<string | null>(null);
+  const [showImageModal, setShowImageModal] = useState<string | null>(null);
   const { id } = useParams<{ id: string }>();
   const [categoryName, setCategoryName] = useState("");
   const [items, setItems] = useState<Item[]>([]);
@@ -38,17 +38,19 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
-   const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resCategory = await fetch(`http://localhost:3333/categories/${id}`);
+        const resCategory = await fetch(`${API_URL}/categories/${id}`);
         if (!resCategory.ok) throw new Error("Categoria não encontrada");
         const category = await resCategory.json();
         setCategoryName(category.name);
 
-        const resItems = await fetch(`http://localhost:3333/categories/${id}/items`);
+        const resItems = await fetch(`${API_URL}/categories/${id}/items`);
         const dataItems = await resItems.json();
         setItems(Array.isArray(dataItems) ? dataItems : []);
       } catch (err) {
@@ -56,12 +58,10 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
       }
     };
     fetchData();
-  }, [id]);
+  }, [id, API_URL]);
 
-
-
-    // Filtrar itens baseados no termo de busca
-  const filteredItems = items.filter(item => 
+  // Filtrar itens baseados no termo de busca
+  const filteredItems = items.filter(item =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.subname.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -84,7 +84,7 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
       formData.append("image", imageFile);
       formData.append("file", attachedFile);
 
-      const response = await fetch("http://localhost:3333/items", {
+      const response = await fetch(`${API_URL}/items`, {
         method: "POST",
         body: formData,
       });
@@ -119,7 +119,7 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
       <main className="main-content">
         <div className="header-section">
           <h1>Categoria: {categoryName}</h1>
-          
+
           {/* Campo de busca */}
           <div className="search-container">
             <input
@@ -131,7 +131,7 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
             />
           </div>
         </div>
-        
+
         <button className="btn-novo-item" onClick={handleAddItem}>
           +
         </button>
@@ -169,19 +169,19 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
             </form>
           </Modal>
         )}
-        
+
         {/* Modal para imagem expandida */}
         {showImageModal && (
           <Modal onClose={() => setShowImageModal(null)}>
-            <img 
-              src={`http://localhost:3333/uploads/${showImageModal}`} 
-              alt="Imagem expandida" 
+            <img
+              src={`${API_URL}/uploads/${showImageModal}`}
+              alt="Imagem expandida"
               className="expanded-image"
             />
           </Modal>
         )}
 
-        <ul  className="items-list">
+        <ul className="items-list">
           {filteredItems.map(item => {
             const isExpanded = expandedItemId === item.id;
 
@@ -189,25 +189,25 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
               <li key={item.id} className={`item-card ${isExpanded ? "expanded" : ""}`}>
                 <div className="item-container">
                   {/* Área da imagem (clicável) */}
-                  <div 
+                  <div
                     className="item-image-container"
                     onClick={() => setShowImageModal(item.imagePath)}
                   >
                     <img
-                      src={`http://localhost:3333/uploads/${item.imagePath}`}
+                      src={`${API_URL}/uploads/${item.imagePath}`}
                       alt={item.name}
                       className="item-image"
                     />
                   </div>
-                  
+
                   {/* Área de informações */}
                   <div className="item-info">
                     <div>
                       <h3>{item.name}</h3>
                       <h4>{item.subname}</h4>
                     </div>
-                    
-                    <button 
+
+                    <button
                       className="btn-expand"
                       onClick={() => setExpandedItemId(isExpanded ? null : item.id)}
                     >
@@ -220,7 +220,7 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
                   <div className="item-details">
                     <p>Data de criação: {new Date(item.createdAt).toLocaleDateString()}</p>
                     <a
-                      href={`http://localhost:3333/uploads/${item.filePath}`}
+                      href={`${API_URL}/uploads/${item.filePath}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn"
