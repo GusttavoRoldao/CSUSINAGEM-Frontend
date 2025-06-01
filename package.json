@@ -7,15 +7,15 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  
   "dependencies": {
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.6.1"
   },
   "devDependencies": {
-      "vite": "^4.0.0",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",
+    "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^4.5.0",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.4",
