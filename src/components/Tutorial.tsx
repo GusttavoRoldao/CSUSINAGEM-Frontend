@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './Tutorial.css';
 
 interface Step {
@@ -16,31 +16,76 @@ interface TutorialProps {
 }
 
 const Tutorial: React.FC<TutorialProps> = ({ steps, currentStep, onStepChange, onFinish }) => {
+  const tooltipRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    // Adiciona classe ao body para estilização
-    document.body.classList.add('tutorial-active');
+    if (!steps.length || currentStep >= steps.length) return;
+
+    const currentStepData = steps[currentStep];
+    const targetElement = document.querySelector(currentStepData.target);
     
-    // Destacar elemento atual
-    const currentElement = document.querySelector(steps[currentStep].target);
-    const allHighlighted = document.querySelectorAll('.tutorial-highlight');
-    
-    // Remove destaque de todos os elementos
-    allHighlighted.forEach(el => el.classList.remove('tutorial-highlight'));
-    
-    // Adiciona destaque ao elemento atual
-    if (currentElement) {
-      currentElement.classList.add('tutorial-highlight');
-      
-      // Scroll para o elemento se necessário
-      currentElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center'
-      });
+    if (!targetElement) {
+      onStepChange(currentStep + 1);
+      return;
     }
 
-    
+    // Adiciona classe de destaque
+    document.body.classList.add('tutorial-active');
+    targetElement.classList.add('tutorial-highlight');
 
-    // Configurar teclas de atalho
+    // Posiciona o tooltip
+    const positionTooltip = () => {
+      if (!tooltipRef.current) return;
+
+      const rect = targetElement.getBoundingClientRect();
+      const position = currentStepData.position || 'bottom';
+      const tooltip = tooltipRef.current;
+
+      // Calcula a posição base
+      let top = 0;
+      let left = 0;
+      let transform = '';
+
+      switch (position) {
+        case 'bottom':
+          top = rect.bottom + 10;
+          left = rect.left + rect.width / 2;
+          transform = 'translateX(-50%)';
+          break;
+        case 'top':
+          top = rect.top - 10;
+          left = rect.left + rect.width / 2;
+          transform = 'translateX(-50%) translateY(-100%)';
+          break;
+        case 'left':
+          top = rect.top + rect.height / 2;
+          left = rect.left - 10;
+          transform = 'translateX(-100%) translateY(-50%)';
+          break;
+        case 'right':
+          top = rect.top + rect.height / 2;
+          left = rect.right + 10;
+          transform = 'translateY(-50%)';
+          break;
+      }
+
+      // Ajuste para elementos fixos/absolutos
+      const style = window.getComputedStyle(targetElement);
+      if (style.position === 'fixed' || style.position === 'absolute') {
+        const scrollY = window.scrollY;
+        top += scrollY;
+      }
+
+      tooltip.style.top = `${top}px`;
+      tooltip.style.left = `${left}px`;
+      tooltip.style.transform = transform;
+    };
+
+    positionTooltip();
+    window.addEventListener('resize', positionTooltip);
+    window.addEventListener('scroll', positionTooltip, { passive: true });
+
+    // Configura atalhos de teclado
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onFinish();
       if (e.key === 'ArrowRight') onStepChange(Math.min(currentStep + 1, steps.length - 1));
@@ -51,8 +96,9 @@ const Tutorial: React.FC<TutorialProps> = ({ steps, currentStep, onStepChange, o
 
     return () => {
       document.body.classList.remove('tutorial-active');
-      const elements = document.querySelectorAll('.tutorial-highlight');
-      elements.forEach(el => el.classList.remove('tutorial-highlight'));
+      targetElement.classList.remove('tutorial-highlight');
+      window.removeEventListener('resize', positionTooltip);
+      window.removeEventListener('scroll', positionTooltip);
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [currentStep, steps, onFinish, onStepChange]);
@@ -60,33 +106,14 @@ const Tutorial: React.FC<TutorialProps> = ({ steps, currentStep, onStepChange, o
   if (!steps.length || currentStep >= steps.length) return null;
 
   const currentStepData = steps[currentStep];
-  const targetElement = document.querySelector(currentStepData.target);
-  
-  if (!targetElement) {
-    onStepChange(currentStep + 1);
-    return null;
-  }
-
-  const rect = targetElement.getBoundingClientRect();
-  const position = currentStepData.position || 'bottom';
-
-  
 
   return (
     <>
       <div className="tutorial-overlay" onClick={onFinish} />
       
       <div 
-        className={`tutorial-tooltip ${position}`}
-        style={{
-          left: `${rect.left + rect.width / 2}px`,
-          top: position === 'bottom' ? `${rect.bottom + 10}px` : 
-               position === 'top' ? `${rect.top - 10}px` :
-               `${rect.top + rect.height / 2}px`,
-          transform: position === 'left' ? 'translateX(-100%) translateY(-50%)' :
-                    position === 'right' ? 'translateX(10px) translateY(-50%)' :
-                    'translateX(-50%)'
-        }}
+        ref={tooltipRef}
+        className={`tutorial-tooltip ${currentStepData.position || 'bottom'}`}
       >
         <div className="tutorial-header">
           <h3>{currentStepData.title}</h3>

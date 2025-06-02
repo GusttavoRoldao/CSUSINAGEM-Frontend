@@ -1,3 +1,4 @@
+/* Tutorial.css */
 .tutorial-overlay {
   position: fixed;
   top: 0;
@@ -6,26 +7,58 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 9998;
-  clip-path: polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%);
-  transition: clip-path 0.3s ease;
-}
-
-.tutorial-overlay.active {
-  pointer-events: auto;
+  backdrop-filter: blur(2px);
 }
 
 .tutorial-tooltip {
-  position: fixed;
+  position: absolute;
   z-index: 9999;
   background-color: white;
   border-radius: 8px;
-  padding: 1rem;
+  padding: 1.25rem;
   max-width: 300px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   animation: fadeIn 0.3s ease;
+  pointer-events: auto;
 }
 
-.tutorial-tooltip::before {
+/* Destaque para elementos */
+.tutorial-highlight {
+  position: relative;
+  z-index: 10000 !important;
+  box-shadow: 0 0 0 3px #00bfff !important;
+  border-radius: 8px !important;
+  animation: pulse 2s infinite;
+}
+
+.tutorial-active .item-card:not(.tutorial-highlight),
+.tutorial-active .btn-novo-item:not(.tutorial-highlight),
+.tutorial-active .search-container:not(.tutorial-highlight) {
+  opacity: 0.5;
+  filter: blur(1px);
+  transition: all 0.3s ease;
+}
+
+.tutorial-active .tutorial-highlight {
+  opacity: 1 !important;
+  filter: none !important;
+  transform: scale(1.02);
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0, 191, 255, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(0, 191, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 191, 255, 0); }
+}
+
+/* Posicionamento das setas */
+.tutorial-tooltip::after {
   content: '';
   position: absolute;
   width: 0;
@@ -33,7 +66,7 @@
   border-style: solid;
 }
 
-.tutorial-tooltip.bottom::before {
+.tutorial-tooltip.bottom::after {
   top: -10px;
   left: 50%;
   transform: translateX(-50%);
@@ -41,7 +74,7 @@
   border-color: transparent transparent white transparent;
 }
 
-.tutorial-tooltip.top::before {
+.tutorial-tooltip.top::after {
   bottom: -10px;
   left: 50%;
   transform: translateX(-50%);
@@ -49,7 +82,7 @@
   border-color: white transparent transparent transparent;
 }
 
-.tutorial-tooltip.left::before {
+.tutorial-tooltip.left::after {
   right: -10px;
   top: 50%;
   transform: translateY(-50%);
@@ -57,7 +90,7 @@
   border-color: transparent transparent transparent white;
 }
 
-.tutorial-tooltip.right::before {
+.tutorial-tooltip.right::after {
   left: -10px;
   top: 50%;
   transform: translateY(-50%);
@@ -65,96 +98,7 @@
   border-color: transparent white transparent transparent;
 }
 
-.tutorial-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.tutorial-header h3 {
-  margin: 0;
-  font-size: 1.2rem;
-  color: #2a2a2a;
-}
-
-.tutorial-close {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #6c757d;
-  padding: 0 0.5rem;
-}
-
-.tutorial-tooltip p {
-  margin: 0 0 1rem 0;
-  color: #495057;
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-.tutorial-footer {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.tutorial-steps {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.tutorial-step {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #dee2e6;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.tutorial-step.active {
-  background-color: #00bfff;
-  transform: scale(1.2);
-}
-
-.tutorial-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-}
-
-.tutorial-button {
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.tutorial-button.primary {
-  background-color: #00bfff;
-  color: white;
-  border: none;
-}
-
-.tutorial-button.primary:hover {
-  background-color: #009ad6;
-}
-
-.tutorial-button.secondary {
-  background-color: transparent;
-  color: #00bfff;
-  border: 1px solid #00bfff;
-}
-
-.tutorial-button.secondary:hover {
-  background-color: rgba(0, 191, 255, 0.1);
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.btn-novo-item.tutorial-highlight {
+  transform: scale(1.1) !important;
+  z-index: 10001 !important;
 }

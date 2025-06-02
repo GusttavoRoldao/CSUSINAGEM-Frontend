@@ -43,8 +43,8 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const API_URL = import.meta.env.VITE_BACKEND_URL;
-  
-const [showTutorial, setShowTutorial] = useState(false);
+
+  const [showTutorial, setShowTutorial] = useState(false);
   const [tutorialStep, setTutorialStep] = useState(0);
 
   // Verifica se é a primeira vez do usuário
@@ -164,7 +164,7 @@ const [showTutorial, setShowTutorial] = useState(false);
 
   return (
     <div className="dashboard-layout">
-      <Sidebar onHelpClick={() => setShowTutorial(true)}  />
+      <Sidebar onHelpClick={() => setShowTutorial(true)} />
       <main className="main-content">
         <div className="header-section">
           <h1>Categoria: {categoryName}</h1>
@@ -182,7 +182,7 @@ const [showTutorial, setShowTutorial] = useState(false);
         </div>
 
         {showTutorial && (
-          <Tutorial 
+          <Tutorial
             steps={tutorialSteps}
             currentStep={tutorialStep}
             onStepChange={setTutorialStep}
