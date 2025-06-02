@@ -10,20 +10,26 @@ interface SidebarItemProps {
   text: string;
   icon?: React.ReactNode;
   onClick: () => void;
-  stepId?: string; // Novo prop para identificação do passo do tutorial
+  stepId?: string;
+  isActive?: boolean;
 }
 
 interface SidebarProps {
   onCategoryAdded: (category: Category) => void;
-  onPinToggle: (isPinned: boolean) => void;
-  onHoverChange: (isHovered: boolean) => void;
-  onOpenModal: () => void;
-   onHelpClick?: () => void;
+  onPinToggle?: (isPinned: boolean) => void;
+  onHoverChange?: (isHovered: boolean) => void;
+  onOpenModal?: () => void;
+  onHelpClick?: () => void;
+  activePath?: string;
 }
 
-const SidebarItem: React.FC<SidebarItemProps> = ({ text, icon, onClick, stepId }) => (
-  <div className="sidebar-item" onClick={onClick} data-step={stepId}>
-    {icon && <span className="sidebar-item-icon">{icon}</span>}
+const SidebarItem: React.FC<SidebarItemProps> = ({ text, icon, onClick, stepId, isActive = false }) => (
+  <div 
+    className={`menu-item ${isActive ? 'active' : ''}`} 
+    onClick={onClick} 
+    data-step={stepId}
+  >
+    <span className="menu-icon">{icon}</span>
     <span className="sidebar-item-text">{text}</span>
   </div>
 );
@@ -31,6 +37,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ text, icon, onClick, stepId }
 const Sidebar: React.FC<SidebarProps> = ({
   onCategoryAdded,
   onHelpClick,
+  activePath = '/dashboard'
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSidebarPinned, setIsSidebarPinned] = useState(false);
@@ -39,7 +46,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [showTutorial, setShowTutorial] = useState(false);
   const [tutorialStep, setTutorialStep] = useState(0);
 
-  // Verifica se é a primeira vez do usuário
   useEffect(() => {
     const hasSeenTutorial = localStorage.getItem('hasSeenSidebarTutorial');
     if (!hasSeenTutorial) {
@@ -106,73 +112,80 @@ const Sidebar: React.FC<SidebarProps> = ({
     <>
       <div
         className={`sidebar-container ${shouldShowSidebar ? 'show' : ''}`}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
         <div className="sidebar">
           <div className="sidebar-header">
             <img src={logo} alt="Logo" className="sidebar-logo" />
           </div>
 
-          <SidebarItem 
-            text="Home" 
-            icon={"🏠"} 
-            stepId="home"
-            onClick={() => handleNavigation('/dashboard')} 
-          />
-          <SidebarItem 
-            text="Histórico" 
-            icon={"📜"} 
-            stepId="history"
-            onClick={() => handleNavigation('/feature')} 
-          />
-          <SidebarItem 
-            text="Categorias" 
-            icon={"🏷️"} 
-            stepId="categories"
-            onClick={() => handleNavigation('add-category')} 
-          />
-
-          <div className="sidebar-help" onClick={() => {
-            // Chama a função passada por prop, se existir
-            onHelpClick?.();
-            // Ou executa ação padrão
-            if (!onHelpClick) {
-              setShowTutorial(true);
-            }
-          }}>
-            <span className="sidebar-help-icon">?</span>
-            <span className="sidebar-help-text">Ajuda</span>
+          <div className="sidebar-menu">
+            <SidebarItem 
+              text="Home" 
+              icon="🏠"
+              stepId="home"
+              isActive={activePath === '/dashboard'}
+              onClick={() => handleNavigation('/dashboard')} 
+            />
+            <SidebarItem 
+              text="Histórico" 
+              icon="📜"
+              stepId="history"
+              isActive={activePath === '/feature'}
+              onClick={() => handleNavigation('/feature')} 
+            />
+            <SidebarItem 
+              text="Categorias" 
+              icon="🏷️"
+              stepId="categories"
+              isActive={isModalOpen}
+              onClick={() => handleNavigation('add-category')} 
+            />
           </div>
 
-          <SidebarItem
-            text="Logout"
-            icon={"🚪"}
-            stepId="logout"
-            onClick={() => handleNavigation('logout')}
-          />
+          <div className="sidebar-footer">
+            <div 
+              className="sidebar-help" 
+              onClick={() => {
+                onHelpClick?.();
+                if (!onHelpClick) setShowTutorial(true);
+              }}
+            >
+              <span className="sidebar-help-icon">?</span>
+              <span className="sidebar-help-text">Ajuda</span>
+            </div>
+
+            <SidebarItem
+              text="Sair"
+              icon="🚪"
+              stepId="logout"
+              onClick={() => handleNavigation('logout')}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Modal de confirmação de logout */}
       <ConfirmationModal
         isOpen={showLogoutConfirm}
         title="Confirmar Logout"
         message="Tem certeza que deseja sair do sistema?"
         onConfirm={handleLogout}
         onCancel={() => setShowLogoutConfirm(false)}
+        confirmText="Sair"
+        cancelText="Cancelar"
       />
 
-      {/* Modal de adição de categoria */}
       {isModalOpen && (
         <ModalCategoria
           onClose={handleModalClose}
           onCategoryAdded={(data) => {
-            if (onCategoryAdded) onCategoryAdded(data);
+            onCategoryAdded?.(data);
             handleModalClose();
           }}
         />
       )}
 
-      {/* Tutorial interativo */}
       {showTutorial && (
         <Tutorial 
           steps={tutorialSteps}

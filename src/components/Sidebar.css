@@ -227,3 +227,73 @@
     transform: translateX(0);
   }
 }
+
+/* Estilos para os itens do menu */
+.sidebar-item {
+  padding: 12px 15px;
+  margin: 5px 0;
+  cursor: pointer;
+  color: #e0e0e0;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-item:hover {
+  background-color: rgba(0, 191, 255, 0.15);
+  color: #ffffff;
+}
+
+.sidebar-item.active {
+  background-color: rgba(0, 191, 255, 0.2);
+  color: #00bfff;
+  font-weight: 600;
+}
+
+.sidebar-item-icon {
+  margin-right: 12px;
+  font-size: 1.1rem;
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Botões de confirmação no modal */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-actions .btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+}
+
+.modal-actions .btn-cancel {
+  background-color: #4a4a6a;
+  color: white;
+  border: none;
+}
+
+.modal-actions .btn-cancel:hover {
+  background-color: #5a5a7a;
+}
+
+.modal-actions .btn-confirm {
+  background-color: #ff5f5f;
+  color: white;
+  border: none;
+}
+
+.modal-actions .btn-confirm:hover {
+  background-color: #ff4040;
+}
