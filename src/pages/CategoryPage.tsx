@@ -86,7 +86,7 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
       target: '.item-image-container',
       title: 'Visualizar Imagem',
       content: 'Clique na imagem para ver uma versão ampliada em tela cheia.',
-      position: 'left'
+      position: 'bottom'
     }
   ];
 
