@@ -68,7 +68,7 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
       target: '.search-container',
       title: 'Busca de Itens',
       content: 'Digite aqui para filtrar os itens por nome ou descrição.',
-      position: 'bottom'
+      position: 'left'
     },
     {
       target: '.item-card:first-child',
