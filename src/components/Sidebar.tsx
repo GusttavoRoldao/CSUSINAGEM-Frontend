@@ -3,6 +3,7 @@ import './Sidebar.css';
 import { Category } from "./MainContent";
 import ModalCategoria from "./ModalCategoria";
 import logo from '../assets/csusinagem.png';
+import ConfirmationModal from "./ConfirmationModal";
 
 interface SidebarItemProps {
   text: string;
@@ -11,12 +12,10 @@ interface SidebarItemProps {
 }
 
 interface SidebarProps {
-
   onCategoryAdded: (category: Category) => void;
   onPinToggle: (isPinned: boolean) => void;
   onHoverChange: (isHovered: boolean) => void;
   onOpenModal: () => void;
-
 }
 
 const SidebarItem: React.FC<SidebarItemProps> = ({ text, icon, onClick }) => (
@@ -28,11 +27,11 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ text, icon, onClick }) => (
 
 const Sidebar: React.FC<SidebarProps> = ({
   onCategoryAdded,
-
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSidebarPinned, setIsSidebarPinned] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -41,7 +40,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const handleNavigation = (path: string): void => {
     if (path === 'logout') {
-      handleLogout();
+      setShowLogoutConfirm(true);
     } else if (path === 'add-category') {
       setIsModalOpen(true);
     } else {
@@ -51,7 +50,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-
   };
 
   const shouldShowSidebar = isSidebarPinned || isHovered;
@@ -60,21 +58,32 @@ const Sidebar: React.FC<SidebarProps> = ({
     <>
       <div
         className={`sidebar-container ${shouldShowSidebar ? 'show' : ''}`}
-
       >
         <div className="sidebar">
           <div className="sidebar-header">
             <img src={logo} alt="Logo" className="sidebar-logo" />
           </div>
 
-
           <SidebarItem text="Home" icon={"🏠"} onClick={() => handleNavigation('/dashboard')} />
           <SidebarItem text="Histórico" icon={"📜"} onClick={() => handleNavigation('/dashboard')} />
           <SidebarItem text="Outros" icon={"🏷️"} onClick={() => handleNavigation('/dashboard')} />
 
-          <SidebarItem text="Logout" icon={"🚪"} onClick={() => handleNavigation('logout')} />
+          <SidebarItem 
+            text="Logout" 
+            icon={"🚪"} 
+            onClick={() => handleNavigation('logout')} 
+          />
         </div>
       </div>
+
+      {/* Modal de confirmação de logout */}
+      <ConfirmationModal
+        isOpen={showLogoutConfirm}
+        title="Confirmar Logout"
+        message="Tem certeza que deseja sair do sistema?"
+        onConfirm={handleLogout}
+        onCancel={() => setShowLogoutConfirm(false)}
+      />
 
       {isModalOpen && (
         <ModalCategoria
