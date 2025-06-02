@@ -307,3 +307,28 @@ form p {
   filter: none !important;
   transform: scale(1.02);
 }
+
+/* Garante que o botão flutuante mantenha sua posição durante o tutorial */
+.btn-novo-item.tutorial-highlight {
+  transform: none !important;
+  position: fixed !important;
+  bottom: 2rem !important;
+  right: 2rem !important;
+  z-index: 10001 !important;
+  animation: pulse 2s infinite, float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) scale(1.1); }
+  50% { transform: translateY(-10px) scale(1.1); }
+}
+
+
+/* Estilo para o botão de expandir durante o tutorial */
+.btn-expand.tutorial-highlight {
+  z-index: 10002 !important;
+  transform: scale(1.5);
+  background-color: rgba(0, 191, 255, 0.2);
+  border-radius: 50%;
+  padding: 0.5rem;
+}
