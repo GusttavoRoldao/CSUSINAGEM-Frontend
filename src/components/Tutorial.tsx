@@ -35,51 +35,58 @@ const Tutorial: React.FC<TutorialProps> = ({ steps, currentStep, onStepChange, o
 
     // Posiciona o tooltip
     const positionTooltip = () => {
-      if (!tooltipRef.current) return;
+  if (!tooltipRef.current || !targetElement) return;
 
-      const rect = targetElement.getBoundingClientRect();
-      const position = currentStepData.position || 'bottom';
-      const tooltip = tooltipRef.current;
+  const rect = targetElement.getBoundingClientRect();
+  const position = currentStepData.position || 'bottom';
+  const tooltip = tooltipRef.current;
 
-      // Calcula a posição base
-      let top = 0;
-      let left = 0;
-      let transform = '';
+  // Verifica se o elemento é fixo
+  const isFixed = window.getComputedStyle(targetElement).position === 'fixed';
+  
+  // Calcula posição considerando scroll apenas para elementos não fixos
+  const scrollY = isFixed ? 0 : window.scrollY;
+  const scrollX = isFixed ? 0 : window.scrollX;
 
-      switch (position) {
-        case 'bottom':
-          top = rect.bottom + 10;
-          left = rect.left + rect.width / 2;
-          transform = 'translateX(-50%)';
-          break;
-        case 'top':
-          top = rect.top - 10;
-          left = rect.left + rect.width / 2;
-          transform = 'translateX(-50%) translateY(-100%)';
-          break;
-        case 'left':
-          top = rect.top + rect.height / 2;
-          left = rect.left - 10;
-          transform = 'translateX(-100%) translateY(-50%)';
-          break;
-        case 'right':
-          top = rect.top + rect.height / 2;
-          left = rect.right + 10;
-          transform = 'translateY(-50%)';
-          break;
-      }
+  let top = rect.top + scrollY;
+  let left = rect.left + scrollX;
+  let transform = '';
 
-      // Ajuste para elementos fixos/absolutos
-      const style = window.getComputedStyle(targetElement);
-      if (style.position === 'fixed' || style.position === 'absolute') {
-        const scrollY = window.scrollY;
-        top += scrollY;
-      }
+  switch (position) {
+    case 'bottom':
+      top += rect.height + 10;
+      left += rect.width / 2;
+      transform = 'translateX(-50%)';
+      break;
+    case 'top':
+      top -= 10;
+      left += rect.width / 2;
+      transform = 'translateX(-50%) translateY(-100%)';
+      break;
+    case 'left':
+      top += rect.height / 2;
+      left -= 10;
+      transform = 'translateX(-100%) translateY(-50%)';
+      break;
+    case 'right':
+      top += rect.height / 2;
+      left += rect.width + 10;
+      transform = 'translateY(-50%)';
+      break;
+  }
 
-      tooltip.style.top = `${top}px`;
-      tooltip.style.left = `${left}px`;
-      tooltip.style.transform = transform;
-    };
+  tooltip.style.top = `${top}px`;
+  tooltip.style.left = `${left}px`;
+  tooltip.style.transform = transform;
+
+  // Força o posicionamento correto para elementos fixos
+  if (isFixed) {
+    targetElement.style.transform = 'none';
+    targetElement.style.top = 'auto';
+    targetElement.style.bottom = '2rem';
+    targetElement.style.right = '2rem';
+  }
+};
 
     positionTooltip();
     window.addEventListener('resize', positionTooltip);
