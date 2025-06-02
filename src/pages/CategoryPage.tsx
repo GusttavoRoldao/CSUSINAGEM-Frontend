@@ -198,11 +198,11 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
           <Modal onClose={() => setShowForm(false)}>
             <form onSubmit={handleSubmit} className="item-form">
               <input type="text" placeholder="Nome" value={name} onChange={e => setName(e.target.value)} />
-              <input type="text" placeholder="Subnome" value={subname} onChange={e => setSubname(e.target.value)} />
+              <input type="text" placeholder="Codigo CS" value={subname} onChange={e => setSubname(e.target.value)} />
 
               {/* Campo para imagem com label */}
               <label>
-                Insira imagem:
+                Insira o PDF: 
                 <input
                   type="file"
                   accept="image/*"
@@ -212,7 +212,7 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
 
               {/* Campo para arquivo CNC com label */}
               <label>
-                Programa CNC:
+                Arquivos : (.cnc,.txt,.gcode,.dwg,.dwf,xlsx)
                 <input
                   type="file"
                   accept=".cnc,.txt,.gcode,.dwg,.dwf,xlsx"
@@ -233,7 +233,7 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
           <Modal onClose={() => setShowImageModal(null)}>
             <img
               src={`${API_URL}/uploads/${showImageModal}`}
-              alt="Imagem expandida"
+              alt="PDF expandido"
               className="expanded-image"
             />
           </Modal>
