@@ -62,31 +62,31 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
       target: '.btn-novo-item',
       title: 'Adicionar Novo Item',
       content: 'Clique aqui para adicionar um novo item a esta categoria.',
-      position: 'right'
+      position: 'bottom'
     },
     {
       target: '.search-container',
       title: 'Busca de Itens',
       content: 'Digite aqui para filtrar os itens por nome ou descrição.',
-      position: 'bottom'
+      position: 'top'
     },
     {
       target: '.item-card:first-child',
       title: 'Lista de Itens',
       content: 'Cada item mostra uma imagem e informações básicas. Clique no item para expandir e ver mais detalhes.',
-      position: 'right'
+      position: 'center'
     },
     {
       target: '.btn-expand',
       title: 'Expandir Detalhes',
       content: 'Clique neste botão para ver informações completas sobre o item, incluindo opções para download, edição e exclusão.',
-      position: 'top'
+      position: 'left'
     },
     {
       target: '.item-image-container',
       title: 'Visualizar Imagem',
       content: 'Clique na imagem para ver uma versão ampliada em tela cheia.',
-      position: 'top'
+      position: 'left'
     }
   ];
 
