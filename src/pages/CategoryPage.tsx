@@ -158,7 +158,7 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
                 Programa CNC:
                 <input
                   type="file"
-                  accept=".cnc,.txt,.gcode"
+                  accept=".cnc,.txt,.gcode,.dwg,.dwf,xlsx"
                   onChange={e => setAttachedFile(e.target.files?.[0] || null)}
                 />
               </label>
