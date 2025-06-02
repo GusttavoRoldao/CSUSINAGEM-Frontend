@@ -18,7 +18,7 @@ interface SidebarProps {
   onPinToggle: (isPinned: boolean) => void;
   onHoverChange: (isHovered: boolean) => void;
   onOpenModal: () => void;
-    onHelpClick: () => void;
+   onHelpClick?: () => void;
 }
 
 const SidebarItem: React.FC<SidebarItemProps> = ({ text, icon, onClick, stepId }) => (
@@ -131,7 +131,14 @@ const Sidebar: React.FC<SidebarProps> = ({
             onClick={() => handleNavigation('add-category')} 
           />
 
-          <div className="sidebar-help" onClick={onHelpClick}>
+          <div className="sidebar-help" onClick={() => {
+            // Chama a função passada por prop, se existir
+            onHelpClick?.();
+            // Ou executa ação padrão
+            if (!onHelpClick) {
+              setShowTutorial(true);
+            }
+          }}>
             <span className="sidebar-help-icon">?</span>
             <span className="sidebar-help-text">Ajuda</span>
           </div>

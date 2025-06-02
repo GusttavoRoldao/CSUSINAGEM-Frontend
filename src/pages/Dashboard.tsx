@@ -7,8 +7,8 @@ import Tutorial from "../components/Tutorial";
 
 export default function Dashboard() {
     const [showAddItemForm, setShowAddItemForm] = useState(false);
-    const [showTutorial, setShowTutorial] = useState(false);
-    const [tutorialStep, setTutorialStep] = useState(0);
+      const [showTutorial, setShowTutorial] = useState(false);
+  const [tutorialStep, setTutorialStep] = useState(0);
 
     // Verifica se é a primeira vez do usuário
     useEffect(() => {
@@ -69,11 +69,11 @@ export default function Dashboard() {
             </div>
 
             {showTutorial && (
-                <Tutorial 
+                <Tutorial
                     steps={tutorialSteps}
                     currentStep={tutorialStep}
                     onStepChange={setTutorialStep}
-                    onFinish={handleTutorialFinish}
+                    onFinish={() => setShowTutorial(false)}
                 />
             )}
         </div>
