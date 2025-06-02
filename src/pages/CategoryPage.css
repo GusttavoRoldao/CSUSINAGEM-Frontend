@@ -208,12 +208,14 @@
 .expanded-image {
   max-width: 90vw;
   max-height: 90vh;
+  z-index: 10000;
   border-radius: 8px;
   object-fit: contain; /* Garante que a imagem inteira seja visível */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Sombra para melhor contraste */
 }
 
 .items-list {
+  z-index: 10000;
   list-style: none; /* Remove os marcadores/pontos */
   padding-left: 0; /* Remove o padding padrão que pode empurrar o conteúdo */
   /* Mantenha as outras propriedades que você já tem */
