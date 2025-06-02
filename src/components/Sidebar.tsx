@@ -65,8 +65,8 @@ const Sidebar: React.FC<SidebarProps> = ({
           </div>
 
           <SidebarItem text="Home" icon={"🏠"} onClick={() => handleNavigation('/dashboard')} />
-          <SidebarItem text="Histórico" icon={"📜"} onClick={() => handleNavigation('/dashboard')} />
-          <SidebarItem text="Outros" icon={"🏷️"} onClick={() => handleNavigation('/dashboard')} />
+          <SidebarItem text="Histórico" icon={"📜"} onClick={() => handleNavigation('/feature')} />
+          <SidebarItem text="Outros" icon={"🏷️"} onClick={() => handleNavigation('/feature')} />
 
           <SidebarItem 
             text="Logout" 

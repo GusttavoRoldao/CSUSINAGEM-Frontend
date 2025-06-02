@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import CustomersList from "./pages/CustomersList";
 import Register from "./pages/Register";
 import CategoryPage from "./pages/CategoryPage";
+import UnderConstruction from "./components/UnderConstruction";
 
 export default function App() {
   const isLoggedIn = Boolean(localStorage.getItem("token"));
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/dashboard" element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" />} />
         <Route path="/customers" element={isLoggedIn ? <CustomersList /> : <Navigate to="/login" />} />
         <Route path="/category/:id" element={isLoggedIn ?<CategoryPage />: <Navigate to="/login" />} />
+        <Route path="/feature" element={isLoggedIn ?<UnderConstruction />: <Navigate to="/login" />} />
         <Route path="*" element={<Navigate to={isLoggedIn ? "/dashboard" : "/login"} />} />
         
         
