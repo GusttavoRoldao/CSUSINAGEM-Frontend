@@ -62,7 +62,7 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
       target: '.btn-novo-item',
       title: 'Adicionar Novo Item',
       content: 'Clique aqui para adicionar um novo item a esta categoria.',
-      position: 'left'
+      position: 'top'
     },
     {
       target: '.search-container',
