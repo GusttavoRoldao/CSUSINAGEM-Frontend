@@ -285,3 +285,25 @@ form p {
   background-color: #009ad6;
   transform: scale(1.1);
 }
+
+/* Estilos para o tutorial */
+.tutorial-highlight {
+  position: relative;
+  z-index: 10000;
+  box-shadow: 0 0 0 3px #00bfff;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.tutorial-active .item-card:not(.tutorial-highlight),
+.tutorial-active .btn-novo-item:not(.tutorial-highlight),
+.tutorial-active .search-container:not(.tutorial-highlight) {
+  opacity: 0.5;
+  filter: blur(1px);
+}
+
+.tutorial-active .tutorial-highlight {
+  opacity: 1 !important;
+  filter: none !important;
+  transform: scale(1.02);
+}

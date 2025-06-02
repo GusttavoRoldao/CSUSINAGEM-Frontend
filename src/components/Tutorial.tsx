@@ -22,9 +22,23 @@ const Tutorial: React.FC<TutorialProps> = ({ steps, currentStep, onStepChange, o
     
     // Destacar elemento atual
     const currentElement = document.querySelector(steps[currentStep].target);
+    const allHighlighted = document.querySelectorAll('.tutorial-highlight');
+    
+    // Remove destaque de todos os elementos
+    allHighlighted.forEach(el => el.classList.remove('tutorial-highlight'));
+    
+    // Adiciona destaque ao elemento atual
     if (currentElement) {
-      currentElement.classList.add('highlight');
+      currentElement.classList.add('tutorial-highlight');
+      
+      // Scroll para o elemento se necessário
+      currentElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
     }
+
+    
 
     // Configurar teclas de atalho
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -37,9 +51,8 @@ const Tutorial: React.FC<TutorialProps> = ({ steps, currentStep, onStepChange, o
 
     return () => {
       document.body.classList.remove('tutorial-active');
-      if (currentElement) {
-        currentElement.classList.remove('highlight');
-      }
+      const elements = document.querySelectorAll('.tutorial-highlight');
+      elements.forEach(el => el.classList.remove('tutorial-highlight'));
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [currentStep, steps, onFinish, onStepChange]);
@@ -56,6 +69,8 @@ const Tutorial: React.FC<TutorialProps> = ({ steps, currentStep, onStepChange, o
 
   const rect = targetElement.getBoundingClientRect();
   const position = currentStepData.position || 'bottom';
+
+  
 
   return (
     <>

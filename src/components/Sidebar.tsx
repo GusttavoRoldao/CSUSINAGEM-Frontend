@@ -18,6 +18,7 @@ interface SidebarProps {
   onPinToggle: (isPinned: boolean) => void;
   onHoverChange: (isHovered: boolean) => void;
   onOpenModal: () => void;
+    onHelpClick: () => void;
 }
 
 const SidebarItem: React.FC<SidebarItemProps> = ({ text, icon, onClick, stepId }) => (
@@ -29,6 +30,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ text, icon, onClick, stepId }
 
 const Sidebar: React.FC<SidebarProps> = ({
   onCategoryAdded,
+  onHelpClick,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSidebarPinned, setIsSidebarPinned] = useState(false);
@@ -129,7 +131,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             onClick={() => handleNavigation('add-category')} 
           />
 
-          <div className="sidebar-help" onClick={() => setShowTutorial(true)}>
+          <div className="sidebar-help" onClick={onHelpClick}>
             <span className="sidebar-help-icon">?</span>
             <span className="sidebar-help-text">Ajuda</span>
           </div>

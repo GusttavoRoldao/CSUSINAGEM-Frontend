@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import './CategoryPage.css';
+import Tutorial from "../components/Tutorial"; // Importe o componente Tutorial
 
 interface Item {
   id: string;
@@ -11,6 +12,7 @@ interface Item {
   filePath: string;
   createdAt: string;
 }
+
 
 interface CategoryPageProps { }
 
@@ -42,6 +44,52 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
 
   const API_URL = import.meta.env.VITE_BACKEND_URL;
   
+const [showTutorial, setShowTutorial] = useState(false);
+  const [tutorialStep, setTutorialStep] = useState(0);
+
+  // Verifica se é a primeira vez do usuário
+  useEffect(() => {
+    const hasSeenTutorial = localStorage.getItem('hasSeenCategoryTutorial');
+    if (!hasSeenTutorial) {
+      setShowTutorial(true);
+      localStorage.setItem('hasSeenCategoryTutorial', 'true');
+    }
+  }, []);
+
+  // Passos do tutorial
+  const tutorialSteps = [
+    {
+      target: '.btn-novo-item',
+      title: 'Adicionar Novo Item',
+      content: 'Clique aqui para adicionar um novo item a esta categoria.',
+      position: 'right'
+    },
+    {
+      target: '.search-container',
+      title: 'Busca de Itens',
+      content: 'Digite aqui para filtrar os itens por nome ou descrição.',
+      position: 'bottom'
+    },
+    {
+      target: '.item-card:first-child',
+      title: 'Lista de Itens',
+      content: 'Cada item mostra uma imagem e informações básicas. Clique no item para expandir e ver mais detalhes.',
+      position: 'right'
+    },
+    {
+      target: '.btn-expand',
+      title: 'Expandir Detalhes',
+      content: 'Clique neste botão para ver informações completas sobre o item, incluindo opções para download, edição e exclusão.',
+      position: 'top'
+    },
+    {
+      target: '.item-image-container',
+      title: 'Visualizar Imagem',
+      content: 'Clique na imagem para ver uma versão ampliada em tela cheia.',
+      position: 'right'
+    }
+  ];
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -116,7 +164,7 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
 
   return (
     <div className="dashboard-layout">
-      <Sidebar />
+      <Sidebar onHelpClick={() => setShowTutorial(true)}  />
       <main className="main-content">
         <div className="header-section">
           <h1>Categoria: {categoryName}</h1>
@@ -132,6 +180,15 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
             />
           </div>
         </div>
+
+        {showTutorial && (
+          <Tutorial 
+            steps={tutorialSteps}
+            currentStep={tutorialStep}
+            onStepChange={setTutorialStep}
+            onFinish={() => setShowTutorial(false)}
+          />
+        )}
 
         <button className="btn-novo-item" onClick={handleAddItem}>
           +
