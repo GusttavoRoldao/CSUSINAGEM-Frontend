@@ -16,6 +16,7 @@ interface SidebarProps {
   onPinToggle: (isPinned: boolean) => void;
   onHoverChange: (isHovered: boolean) => void;
   onOpenModal: () => void;
+  onHelpClick: () => void;
 }
 
 const SidebarItem: React.FC<SidebarItemProps> = ({ text, icon, onClick }) => (
@@ -27,6 +28,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ text, icon, onClick }) => (
 
 const Sidebar: React.FC<SidebarProps> = ({
   onCategoryAdded,
+  onHelpClick
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSidebarPinned, setIsSidebarPinned] = useState(false);
@@ -68,10 +70,14 @@ const Sidebar: React.FC<SidebarProps> = ({
           <SidebarItem text="Histórico" icon={"📜"} onClick={() => handleNavigation('/feature')} />
           <SidebarItem text="Outros" icon={"🏷️"} onClick={() => handleNavigation('/feature')} />
 
-          <SidebarItem 
-            text="Logout" 
-            icon={"🚪"} 
-            onClick={() => handleNavigation('logout')} 
+          <div className="sidebar-help" onClick={onHelpClick}>
+            <span className="sidebar-help-icon">?</span>
+            <span className="sidebar-help-text">Ajuda</span>
+          </div>
+          <SidebarItem
+            text="Logout"
+            icon={"🚪"}
+            onClick={() => handleNavigation('logout')}
           />
         </div>
       </div>

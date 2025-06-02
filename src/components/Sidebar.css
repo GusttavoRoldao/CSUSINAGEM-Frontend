@@ -39,6 +39,38 @@
   border-radius: 25px;
 }
 
+.sidebar-help {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    margin: 0.5rem 0;
+    cursor: pointer;
+    color: #00bfff;
+    transition: all 0.3s ease;
+    border-radius: 6px;
+}
+
+.sidebar-help:hover {
+    background-color: rgba(0, 191, 255, 0.1);
+}
+
+.sidebar-help-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background-color: #00bfff;
+    color: white;
+    border-radius: 50%;
+    margin-right: 0.75rem;
+    font-weight: bold;
+}
+
+.sidebar-help-text {
+    font-size: 0.9rem;
+}
+
 /* Adicione estas classes ao final do arquivo */
 .btn {
   padding: 0.5rem 1rem;
