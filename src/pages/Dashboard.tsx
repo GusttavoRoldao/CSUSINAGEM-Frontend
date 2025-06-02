@@ -4,11 +4,12 @@ import MainContent from "../components/MainContent";
 import './Dashboard.css';
 import CategoryPage from "./CategoryPage";
 import Tutorial from "../components/Tutorial";
+import { Button } from "@mui/material"; // Importe o componente de botão que você utiliza
 
 export default function Dashboard() {
     const [showAddItemForm, setShowAddItemForm] = useState(false);
-      const [showTutorial, setShowTutorial] = useState(false);
-  const [tutorialStep, setTutorialStep] = useState(0);
+    const [showTutorial, setShowTutorial] = useState(false);
+    const [tutorialStep, setTutorialStep] = useState(0);
 
     // Verifica se é a primeira vez do usuário
     useEffect(() => {
@@ -50,6 +51,11 @@ export default function Dashboard() {
         setShowTutorial(false);
     };
 
+    const handleShowTutorial = () => {
+        setTutorialStep(0); // Reinicia para o primeiro passo
+        setShowTutorial(true);
+    };
+
     return (
         <div className="dashboard-layout">
             <Sidebar
@@ -64,7 +70,19 @@ export default function Dashboard() {
                 {showAddItemForm ? (
                     <CategoryPage />
                 ) : (
-                    <MainContent />
+                    <>
+                        <MainContent />
+                        <div style={{ position: 'fixed', bottom: '20px', right: '20px' }}>
+                            <Button 
+                                variant="contained" 
+                                color="primary" 
+                                onClick={handleShowTutorial}
+                                style={{ borderRadius: '50%', minWidth: '50px', height: '50px' }}
+                            >
+                                ?
+                            </Button>
+                        </div>
+                    </>
                 )}
             </div>
 
@@ -73,7 +91,7 @@ export default function Dashboard() {
                     steps={tutorialSteps}
                     currentStep={tutorialStep}
                     onStepChange={setTutorialStep}
-                    onFinish={() => setShowTutorial(false)}
+                    onFinish={handleTutorialFinish}
                 />
             )}
         </div>
