@@ -14,53 +14,61 @@
 
 }
 
-/* Estilos para o tutorial */
-.sidebar-help {
+/* Estilos da sidebar interna */
+.sidebar {
+  background-color: rgb(27, 17, 104);
+  padding: 15px;
   display: flex;
+  flex-direction: column;
+  border-right: 1px solid #200000;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: flex-end;
   align-items: center;
-  padding: 0.75rem 1rem;
-  margin: 0.5rem 0;
-  cursor: pointer;
-  color: #00bfff;
-  transition: all 0.3s ease;
-  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.sidebar-logo {
+  width: 25vh;
+  margin: 10px 10;
+  display: block;
+  border-radius: 25px;
+}
+
+.sidebar-help {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    margin: 0.5rem 0;
+    cursor: pointer;
+    color: #00bfff;
+    transition: all 0.3s ease;
+    border-radius: 6px;
 }
 
 .sidebar-help:hover {
-  background-color: rgba(0, 191, 255, 0.1);
+    background-color: rgba(0, 191, 255, 0.1);
 }
 
 .sidebar-help-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  background-color: #00bfff;
-  color: white;
-  border-radius: 50%;
-  margin-right: 0.75rem;
-  font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background-color: #00bfff;
+    color: white;
+    border-radius: 50%;
+    margin-right: 0.75rem;
+    font-weight: bold;
 }
 
 .sidebar-help-text {
-  font-size: 0.9rem;
-}
-
-/* Destaque para elementos no tutorial */
-.sidebar-item[data-step] {
-  transition: all 0.3s ease;
-}
-
-.tutorial-active [data-step] {
-  opacity: 0.5;
-}
-
-.tutorial-active [data-step].highlight {
-  opacity: 1;
-  transform: scale(1.05);
-  box-shadow: 0 0 0 2px #00bfff;
-  border-radius: 6px;
+    font-size: 0.9rem;
 }
 
 /* Adicione estas classes ao final do arquivo */
