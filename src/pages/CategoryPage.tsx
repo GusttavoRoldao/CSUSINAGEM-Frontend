@@ -198,21 +198,21 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
           <Modal onClose={() => setShowForm(false)}>
             <form onSubmit={handleSubmit} className="item-form">
               <input type="text" placeholder="Nome" value={name} onChange={e => setName(e.target.value)} />
-              <input type="text" placeholder="Subnome" value={subname} onChange={e => setSubname(e.target.value)} />
+              <input type="text" placeholder="Codigo CS" value={subname} onChange={e => setSubname(e.target.value)} />
 
               {/* Campo para imagem com label */}
               <label>
-                Insira imagem:
+                Insira o desenho em PDF (suporta IPT, PNG, JPG, etc.):
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/*,.ipt" // Adiciona .ipt aos formatos aceitos
                   onChange={e => setImageFile(e.target.files?.[0] || null)}
                 />
               </label>
 
               {/* Campo para arquivo CNC com label */}
               <label>
-                Programa CNC:
+                Arquivo do desenho: (suporta .cnc,.txt,.gcode,.dwg,.dwf,xlsx)
                 <input
                   type="file"
                   accept=".cnc,.txt,.gcode,.dwg,.dwf,xlsx"
@@ -231,14 +231,27 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
         {/* Modal para imagem expandida */}
         {showImageModal && (
           <Modal onClose={() => setShowImageModal(null)}>
-            <img
-              src={`${API_URL}/uploads/${showImageModal}`}
-              alt="Imagem expandida"
-              className="expanded-image"
-            />
+            {showImageModal.endsWith('.ipt') ? (
+              <div className="ipt-file-viewer">
+                <p>Arquivo IPT: {showImageModal}</p>
+                <a
+                  href={`${API_URL}/uploads/${showImageModal}`}
+                  download
+                  className="btn"
+                >
+                  Baixar arquivo IPT
+                </a>
+                {/* Você pode adicionar um visualizador 3D aqui se necessário */}
+              </div>
+            ) : (
+              <img
+                src={`${API_URL}/uploads/${showImageModal}`}
+                alt="Imagem expandida"
+                className="expanded-image"
+              />
+            )}
           </Modal>
         )}
-
         <ul className="items-list">
           {filteredItems.map(item => {
             const isExpanded = expandedItemId === item.id;
@@ -251,11 +264,22 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
                     className="item-image-container"
                     onClick={() => setShowImageModal(item.imagePath)}
                   >
-                    <img
-                      src={`${API_URL}/uploads/${item.imagePath}`}
-                      alt={item.name}
-                      className="item-image"
-                    />
+                    {item.imagePath.endsWith('.ipt') ? (
+                      <div className="ipt-thumbnail">
+                        <img
+                          src="/ipt-icon.png" // Ícone genérico para arquivos IPT
+                          alt="Arquivo IPT"
+                          className="item-image"
+                        />
+                        
+                      </div>
+                    ) : (
+                      <img
+                        src={`${API_URL}/uploads/${item.imagePath}`}
+                        alt={item.name}
+                        className="item-image"
+                      />
+                    )}
                   </div>
 
                   {/* Área de informações */}
