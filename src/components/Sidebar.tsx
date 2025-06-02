@@ -136,11 +136,11 @@ const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => handleNavigation('/feature')} 
             />
             <SidebarItem 
-              text="Categorias" 
+              text="Indicadores" 
               icon="🏷️"
               stepId="categories"
-              isActive={isModalOpen}
-              onClick={() => handleNavigation('add-category')} 
+              isActive={activePath === '/feature'}
+              onClick={() => handleNavigation('/feature')} 
             />
           </div>
 
