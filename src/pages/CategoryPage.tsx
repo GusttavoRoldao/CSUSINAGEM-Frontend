@@ -4,6 +4,7 @@ import Sidebar from "../components/Sidebar";
 import './CategoryPage.css';
 import Tutorial from "../components/Tutorial"; // Importe o componente Tutorial
 import QrCodeStatus from "../components/QrCodeStatus";
+import EditItemModal from "../components/EditItemModal";
 
 export interface Item {
   id: string;
@@ -44,6 +45,8 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
   const [error, setError] = useState("");
   const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [editingItem, setEditingItem] = useState<Item | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<Item | null>(null);
 
   const API_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -256,7 +259,7 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
   };
 
 
-  
+
 
   const updateItemStatus = async (itemId: string, status: 'PENDENTE' | 'CONCLUIDO') => {
     try {
@@ -275,6 +278,32 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
       ));
     } catch (err) {
       console.error('Erro:', err);
+    }
+  };
+
+  const handleUpdateItem = (updatedItem: Item) => {
+    setItems(items.map(item =>
+      item.id === updatedItem.id ? updatedItem : item
+    ));
+  };
+
+  const handleDeleteItem = async () => {
+    if (!itemToDelete) return;
+
+    try {
+      const response = await fetch(`${API_URL}/items/${itemToDelete.id}`, {
+        method: 'DELETE'
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao excluir item');
+      }
+
+      setItems(items.filter(item => item.id !== itemToDelete.id));
+      setItemToDelete(null);
+    } catch (error) {
+      console.error('Erro ao excluir item:', error);
+      alert('Erro ao excluir item');
     }
   };
 
@@ -349,8 +378,8 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
           <Modal onClose={() => setShowImageModal(null)}>
             {showImageModal.endsWith('.ipt') ? (
               <div className="ipt-file-viewer">
-                
-              
+
+
               </div>
             ) : (
               <img
@@ -431,8 +460,50 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
                       </div>
 
 
-                      <button className="btn editar">Editar</button>
-                      <button className="btn excluir">Excluir</button>
+                      <button
+                        className="btn editar"
+                        onClick={() => setEditingItem(item)}
+                      >
+                        Editar
+                      </button>
+                      <button
+                        className="btn excluir"
+                        onClick={() => setItemToDelete(item)}
+                      >
+                        Excluir
+                      </button>
+
+                      {editingItem && (
+                        <EditItemModal
+                          item={editingItem}
+                          onClose={() => setEditingItem(null)}
+                          onSave={handleUpdateItem}
+                        />
+                      )}
+
+                      {itemToDelete && (
+                        <Modal onClose={() => setItemToDelete(null)}>
+                          <div className="confirmation-dialog">
+                            <h3>Confirmar Exclusão</h3>
+                            <p>Tem certeza que deseja excluir o item "{itemToDelete.name}"?</p>
+                            <div className="confirmation-buttons">
+                              <button
+                                className="btn cancel"
+                                onClick={() => setItemToDelete(null)}
+                              >
+                                Cancelar
+                              </button>
+                              <button
+                                className="btn delete"
+                                onClick={handleDeleteItem}
+                              >
+                                Confirmar Exclusão
+                              </button>
+                            </div>
+                          </div>
+                        </Modal>
+                      )}
+
                     </div>
                   </div>
                 )}
