@@ -216,17 +216,7 @@
   background-color: #ff4040;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-  .sidebar-container {
-    width: 230px;
-    transform: translateX(-100%);
-  }
-  
-  .sidebar-container.open {
-    transform: translateX(0);
-  }
-}
+
 
 /* Estilos para os itens do menu */
 .sidebar-item {
