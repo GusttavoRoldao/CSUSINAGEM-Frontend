@@ -3,14 +3,17 @@ import { useParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import './CategoryPage.css';
 import Tutorial from "../components/Tutorial"; // Importe o componente Tutorial
+import QrCodeStatus from "../components/QrCodeStatus";
 
-interface Item {
+export interface Item {
   id: string;
   name: string;
   subname: string;
   imagePath: string;
   filePath: string;
   createdAt: string;
+  status: 'PENDENTE' | 'CONCLUIDO'; // Adicione esta linha
+  dwgPath?: string;
 }
 
 
@@ -91,6 +94,96 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
   ];
 
 
+  const printPDF = (filePath: string) => {
+    window.open(`${API_URL}/uploads/${filePath}`, '_blank');
+  };
+
+  const printQRCode = (itemId: string, itemName: string) => {
+    try {
+      // 1. Encontrar o container do QR Code pelo data-attribute específico
+      const qrContainer = document.querySelector(`[data-qr-container-id="qr-container-${itemId}"]`);
+
+      if (!qrContainer) {
+        throw new Error('Container do QR Code não encontrado');
+      }
+
+      // 2. Encontrar o elemento SVG dentro do container
+      const qrCodeSvg = qrContainer.querySelector('svg');
+
+      if (!qrCodeSvg) {
+        throw new Error('Elemento SVG do QR Code não encontrado');
+      }
+
+      // 3. Serializar o SVG para string
+      const serializer = new XMLSerializer();
+      const svgStr = serializer.serializeToString(qrCodeSvg);
+
+      // 4. Criar URL de dados
+      const svgBlob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(svgBlob);
+
+      // 5. Criar janela de impressão
+      const printWindow = window.open('', '_blank');
+      if (printWindow) {
+        printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>QR Code - ${itemName}</title>
+            <style>
+              body { 
+                display: flex; 
+                justify-content: center; 
+                align-items: center; 
+                height: 100vh; 
+                margin: 0; 
+                flex-direction: column;
+                text-align: center;
+                font-family: Arial, sans-serif;
+              }
+              .qr-code-container {
+                text-align: center;
+                padding: 20px;
+                max-width: 90%;
+                margin: 0 auto;
+              }
+              .qr-code-image {
+                width: 300px;
+                height: 300px;
+                margin: 0 auto 20px;
+              }
+              .item-info {
+                margin-bottom: 20px;
+              }
+              @media print {
+                body { height: auto; }
+                .no-print { display: none; }
+              }
+            </style>
+          </head>
+          <body>
+            <div class="qr-code-container">
+              <div class="item-info">
+                <h2>${itemName}</h2>
+                <p>ID: ${itemId}</p>
+                <p>Status: ${items.find(item => item.id === itemId)?.status || 'N/A'}</p>
+              </div>
+              <img class="qr-code-image" src="${url}" alt="QR Code" 
+                   onload="window.print(); setTimeout(() => window.close(), 500);" />
+              <p class="no-print">Caso a impressão não inicie automaticamente, use o comando Ctrl+P</p>
+            </div>
+          </body>
+        </html>
+      `);
+        printWindow.document.close();
+      }
+    } catch (error) {
+      console.error('Erro ao imprimir QR Code:', error);
+      alert('Erro ao imprimir QR Code: ' + (error as Error).message);
+    }
+  };
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -119,7 +212,7 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
     e.preventDefault();
     setError("");
 
-    if (!name || !subname || !imageFile || !attachedFile) {
+    if (!name || !subname) {
       setError("Todos os campos são obrigatórios.");
       return;
     }
@@ -130,8 +223,8 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
       formData.append("name", name);
       formData.append("subname", subname);
       formData.append("categoryId", id!);
-      formData.append("image", imageFile);
-      formData.append("file", attachedFile);
+      if (imageFile) formData.append("image", imageFile);
+      if (attachedFile) formData.append("file", attachedFile);
 
       const response = await fetch(`${API_URL}/items`, {
         method: "POST",
@@ -160,6 +253,29 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
 
   const handleAddItem = () => {
     setShowForm(true);
+  };
+
+
+  
+
+  const updateItemStatus = async (itemId: string, status: 'PENDENTE' | 'CONCLUIDO') => {
+    try {
+      const response = await fetch(`${API_URL}/items/${itemId}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      if (!response.ok) throw new Error('Erro ao atualizar status');
+
+      setItems(items.map(item =>
+        item.id === itemId ? { ...item, status } : item
+      ));
+    } catch (err) {
+      console.error('Erro:', err);
+    }
   };
 
   return (
@@ -202,20 +318,20 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
 
               {/* Campo para imagem com label */}
               <label>
-                Insira o PDF: 
+                Insira o DWG ou PNG:
                 <input
                   type="file"
-                  accept="image/*"
+                  accept=".cnc,.txt,.gcode,.png,.dwg,.dwf,xlsx"
                   onChange={e => setImageFile(e.target.files?.[0] || null)}
                 />
               </label>
 
               {/* Campo para arquivo CNC com label */}
               <label>
-                Arquivos : (.cnc,.txt,.gcode,.dwg,.dwf,xlsx)
+                Arquivo PDF : (.cnc,.txt,.gcode,.dwg,.dwf,xlsx,.pfd,.PDF)
                 <input
                   type="file"
-                  accept=".cnc,.txt,.gcode,.dwg,.dwf,xlsx"
+                  accept=".cnc,.txt,.gcode,.dwg,.dwf,xlsx,.pdf,.PDF"
                   onChange={e => setAttachedFile(e.target.files?.[0] || null)}
                 />
               </label>
@@ -231,11 +347,18 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
         {/* Modal para imagem expandida */}
         {showImageModal && (
           <Modal onClose={() => setShowImageModal(null)}>
-            <img
-              src={`${API_URL}/uploads/${showImageModal}`}
-              alt="PDF expandido"
-              className="expanded-image"
-            />
+            {showImageModal.endsWith('.ipt') ? (
+              <div className="ipt-file-viewer">
+                
+              
+              </div>
+            ) : (
+              <img
+                src={`${API_URL}/uploads/${showImageModal}`}
+                alt="Imagem expandida"
+                className="expanded-image"
+              />
+            )}
           </Modal>
         )}
 
@@ -274,18 +397,40 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
                   </div>
                 </div>
 
+
+
                 {isExpanded && (
                   <div className="item-details">
                     <p>Data de criação: {new Date(item.createdAt).toLocaleDateString()}</p>
-                    <a
-                      href={`${API_URL}/uploads/${item.filePath}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn"
-                    >
-                      Baixar arquivo
-                    </a>
+                    <QrCodeStatus
+                      itemId={item.id}
+                      onStatusChange={(newStatus) => updateItemStatus(item.id, newStatus)}
+                      currentStatus={item.status || 'PENDENTE'}
+                      onPrintQrCode={() => printQRCode(item.id, item.name)}
+                    />
                     <div className="action-buttons">
+                      <a
+                        href={`${API_URL}/uploads/${item.filePath}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn"
+                      >
+                        Baixar arquivo pdf
+                      </a>
+
+                      <div className="ipt-file-viewer">
+
+                        <a
+                          href={`${API_URL}/uploads/${item.imagePath}`}
+                          download
+                          className="btn"
+                        >
+                          Baixar arquivo DWG
+                        </a>
+                        {/* Você pode adicionar um visualizador 3D aqui se necessário */}
+                      </div>
+
+
                       <button className="btn editar">Editar</button>
                       <button className="btn excluir">Excluir</button>
                     </div>
@@ -299,5 +444,9 @@ const CategoryPage: React.FC<CategoryPageProps> = () => {
     </div>
   );
 };
+
+
+
+
 
 export default CategoryPage;

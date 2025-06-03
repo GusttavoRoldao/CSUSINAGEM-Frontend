@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import './Sidebar.css';
+import './NotificationModal.css';
 import { Category } from "./MainContent";
 import ModalCategoria from "./ModalCategoria";
 import logo from '../assets/csusinagem.png';
 import ConfirmationModal from "./ConfirmationModal";
 import Tutorial from "./Tutorial";
+// Adicione no início do arquivo
+import NotificationModal from "./NotificationModal";
+import { Item } from "../pages/CategoryPage"; // Importe a interface Item
 
 interface SidebarItemProps {
   text: string;
@@ -24,9 +28,9 @@ interface SidebarProps {
 }
 
 const SidebarItem: React.FC<SidebarItemProps> = ({ text, icon, onClick, stepId, isActive = false }) => (
-  <div 
-    className={`menu-item ${isActive ? 'active' : ''}`} 
-    onClick={onClick} 
+  <div
+    className={`menu-item ${isActive ? 'active' : ''}`}
+    onClick={onClick}
     data-step={stepId}
   >
     <span className="menu-icon">{icon}</span>
@@ -45,6 +49,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
   const [tutorialStep, setTutorialStep] = useState(0);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [pendingItems, setPendingItems] = useState<Item[]>([]);
+
 
   useEffect(() => {
     const hasSeenTutorial = localStorage.getItem('hasSeenSidebarTutorial');
@@ -87,6 +94,54 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
   ];
 
+  const fetchPendingItems = async () => {
+  try {
+    const response = await fetch(`${API_URL}/items?status=PENDENTE&sort=createdAt:desc&limit=5`);
+    
+    if (!response.ok) {
+      throw new Error(`Erro HTTP: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    setPendingItems(Array.isArray(data) ? data : []);
+  } catch (error) {
+    console.error("Erro ao buscar itens pendentes:", error);
+    setPendingItems([]);
+    alert("Não foi possível carregar os itens pendentes");
+  }
+};
+
+  const handleNotificationClick = () => {
+    fetchPendingItems();
+    setShowNotifications(true);
+  };
+
+  const API_URL = import.meta.env.VITE_BACKEND_URL;
+
+  const handleDownloadPdf = (filePath: string) => {
+    window.open(`${API_URL}/uploads/${filePath}`, '_blank');
+  };
+
+  const handleDownloadDwg = (filePath: string) => {
+    window.open(`${API_URL}/uploads/${filePath}`, '_blank');
+  };
+
+
+  const handleStatusChange = async (itemId: string, status: 'PENDENTE' | 'CONCLUIDO') => {
+    try {
+      await fetch(`${API_URL}/items/${itemId}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status }),
+      });
+      fetchPendingItems(); // Atualiza a lista após mudança
+    } catch (error) {
+      console.error("Erro ao atualizar status:", error);
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     window.location.href = '/login';
@@ -121,32 +176,38 @@ const Sidebar: React.FC<SidebarProps> = ({
           </div>
 
           <div className="sidebar-menu">
-            <SidebarItem 
-              text="Home" 
+            <SidebarItem
+              text="Home"
               icon="🏠"
               stepId="home"
               isActive={activePath === '/dashboard'}
-              onClick={() => handleNavigation('/dashboard')} 
+              onClick={() => handleNavigation('/dashboard')}
             />
-            <SidebarItem 
-              text="Histórico" 
+            <SidebarItem
+              text="Histórico"
               icon="📜"
               stepId="history"
               isActive={activePath === '/feature'}
-              onClick={() => handleNavigation('/feature')} 
+              onClick={() => handleNavigation('/feature')}
             />
-            <SidebarItem 
-              text="Indicadores" 
+            <SidebarItem
+              text="Indicadores"
               icon="🏷️"
               stepId="categories"
               isActive={activePath === '/feature'}
-              onClick={() => handleNavigation('/feature')} 
+              onClick={() => handleNavigation('/feature')}
+            />
+            <SidebarItem
+              text="Notificações"
+              icon="🔔"
+              stepId="notifications"
+              onClick={handleNotificationClick}
             />
           </div>
 
           <div className="sidebar-footer">
-            <div 
-              className="sidebar-help" 
+            <div
+              className="sidebar-help"
               onClick={() => {
                 onHelpClick?.();
                 if (!onHelpClick) setShowTutorial(true);
@@ -175,6 +236,14 @@ const Sidebar: React.FC<SidebarProps> = ({
         confirmText="Sair"
         cancelText="Cancelar"
       />
+      <NotificationModal
+        isOpen={showNotifications}
+        onClose={() => setShowNotifications(false)}
+        pendingItems={pendingItems}
+        onDownloadPdf={handleDownloadPdf}
+        onDownloadDwg={handleDownloadDwg}
+        onStatusChange={handleStatusChange}
+      />
 
       {isModalOpen && (
         <ModalCategoria
@@ -187,7 +256,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       )}
 
       {showTutorial && (
-        <Tutorial 
+        <Tutorial
           steps={tutorialSteps}
           currentStep={tutorialStep}
           onStepChange={setTutorialStep}

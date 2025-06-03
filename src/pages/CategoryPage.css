@@ -334,3 +334,106 @@ form p {
   border-radius: 50%;
   padding: 0.5rem;
 }
+
+.ipt-file-viewer {
+  padding: 20px;
+  text-align: center;
+}
+
+.ipt-thumbnail {
+  position: relative;
+  display: inline-block;
+}
+
+.ipt-thumbnail span {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+
+/* Adicione ao CategoryPage.css */
+.qr-code-container {
+  margin: 20px 0;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.qr-code-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* No seu arquivo de estilos */
+.qr-code-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.print-btn {
+  background: #4a6baf;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.print-btn:hover {
+  background: #3a5a9f;
+}
+
+.status-btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.status-btn.pending {
+  background: #ff9800;
+  color: white;
+}
+
+.status-btn.completed {
+  background: #4caf50;
+  color: white;
+}
+
+.confirm-status-page {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.confirm-btn {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 20px;
+}
+
+.confirm-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
