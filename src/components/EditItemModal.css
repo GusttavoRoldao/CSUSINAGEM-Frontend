@@ -1,0 +1,87 @@
+/* Estilos para o modal de edição */
+.item-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group label {
+  font-weight: 500;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.error-message {
+  color: #e74c3c;
+  margin: 10px 0;
+}
+
+/* Estilos para o diálogo de confirmação */
+.confirmation-dialog {
+  padding: 20px;
+  text-align: center;
+}
+
+.confirmation-dialog h3 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.confirmation-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.btn.cancel {
+  background-color: #95a5a6;
+}
+
+.btn.delete {
+  background-color: #e74c3c;
+}
+
+.btn.cancel:hover {
+  background-color: #7f8c8d;
+}
+
+.btn.delete:hover {
+  background-color: #c0392b;
+}
+
+/* Estilos para botões de ação */
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn.editar {
+  background-color: #3498db;
+}
+
+.btn.excluir {
+  background-color: #e74c3c;
+}
+
+.btn.editar:hover {
+  background-color: #2980b9;
+}
+
+.btn.excluir:hover {
+  background-color: #c0392b;
+}
